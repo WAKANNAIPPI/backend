@@ -56,3 +56,15 @@ func CreateUser(u User) { //ユーザー作成関数
 	db.Create(&u)
 
 }
+
+func GetHashUserPassword(uID string) string { //Hash値状態のpasswordを返す関数
+	db := DBconnect()
+	//UserIDを入れてレコードを特定
+	user := User{}
+	user.Id = uID
+
+	//単一レコードを引っ張ってくる
+	db.First(&user)
+
+	return user.Password
+}

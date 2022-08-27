@@ -52,6 +52,7 @@ func CreateUser(u User) { //ユーザー作成関数
 	uHashedPas, _ := bcrypt.GenerateFromPassword(uPas, 5)
 	u.Password = string(uHashedPas)
 
+	//データベースに登録
 	db.Create(&u)
 
 }

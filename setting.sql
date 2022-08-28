@@ -4,7 +4,7 @@ use wakannaippi;
 create table users(
     user_id varchar(60) not null,
     user_name varchar(60) not null,
-    user_password varchar(60) not null,
+    user_password varchar(100) not null,
     is_deleted boolean default 0,
     primary key(user_id) 
 );

@@ -57,7 +57,7 @@ func CreateUser(u User) { //ユーザー作成関数
 
 }
 
-func GetHashUserPassword(uID string) []byte { //Hash値状態のpasswordを返す関数
+func GetUserData(uID string) User { //ユーザ情報を取得する関数
 	db := DBconnect()
 	//UserIDを入れてレコードを特定
 	user := User{}
@@ -66,5 +66,5 @@ func GetHashUserPassword(uID string) []byte { //Hash値状態のpasswordを返�
 	//単一レコードを引っ張ってくる
 	db.First(&user)
 
-	return []byte(user.Password)
+	return user
 }

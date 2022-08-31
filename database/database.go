@@ -9,12 +9,31 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
-
+//ユーザテーブル
 type User struct {
 	Id        string `gorm:"column:user_id"`
 	Name      string `gorm:"column:user_name"`
 	Password  string `gorm:"column:user_password"`
-	IsDeleted bool   `gorm:"column:is_deleted"`
+	IsDeleted bool   `gorm:"column:is_deleted"` //論理削除フラグ
+}
+//ユーザitem情報テーブル
+type User_item struct {
+	Iid      string `gorm:"column:user_item_id"`       //アイテムid
+	Uid      string `gorm:"column:user_id"`            //ユーザid
+	Quantity int    `gorm:"column:user_item_quantity"` //アイテム数量
+}
+//item情報テーブル
+type Item_informtion struct {
+	Iid   string `gorm:"column:item_id"`
+	Iname string `gorm:"column:item_name"`
+}
+
+
+//Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
+type Item_difference struct {
+	Iid string`json:"itemid"`
+	Quantity string `json:"diff"`
+	
 }
 
 func DBconnect() *gorm.DB {
@@ -57,14 +76,28 @@ func CreateUser(u User) { //ユーザー作成関数
 
 }
 
-func GetUserData(uID string) User { //ユーザ情報を取得する関数
+func GetUserData(u User) User { //ユーザ情報を取得する関数
 	db := DBconnect()
 	//UserIDを入れてレコードを特定
 	user := User{}
-	user.Id = uID
+	user.Id = u.Id
 
 	//単一レコードを引っ張ってくる
 	db.First(&user)
 
 	return user
+}
+
+func SetUserItemData(u User, item []) { //クライアントにはアイテム名と更新されたアイテム数をjsonとして渡される前提
+	db := DBconnect()
+
+	// json形式 [{"ItemId":"", Quantity:""}]
+	for i := 0; i < len(item); i++{
+		
+	}
+
+}
+
+func GetUserItemData(u User) {
+
 }

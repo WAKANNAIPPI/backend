@@ -16,3 +16,17 @@ Controller
 rout: ルーティングする場所(アプリ側にポートの案内をする)
 
 Viewはなし
+
+# dbについて
+database/db.iniを作成します<br>
+--------------------------------<br>
+[db]<br>
+dbDriver = mysql <br>
+dbName = wakannaippi <br>
+dbUserName = ** <br>
+dbUserPass = ** <br>
+dbHost = localhost <br>
+dbPort = 3306 <br>
+--------------------------------<br>
+
+のように書いてください

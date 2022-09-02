@@ -22,11 +22,6 @@ type User_item struct {
 	Uid      string `gorm:"column:user_id"`            //ユーザid
 	Quantity int    `gorm:"column:user_item_quantity"` //アイテム数量
 }
-//item情報テーブル
-type Item_informtion struct {
-	Iid   string `gorm:"column:item_id"`
-	Iname string `gorm:"column:item_name"`
-}
 
 
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)

@@ -9,31 +9,26 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+
 //ユーザテーブル
 type User struct {
 	Id        string `gorm:"column:user_id"`
-	Name      string `gorm:"column:user_name"`
 	Password  string `gorm:"column:user_password"`
+	Name      string `gorm:"column:user_name"`
 	IsDeleted bool   `gorm:"column:is_deleted"` //論理削除フラグ
 }
+
 //ユーザitem情報テーブル
 type User_item struct {
 	Iid      string `gorm:"column:user_item_id"`       //アイテムid
 	Uid      string `gorm:"column:user_id"`            //ユーザid
 	Quantity int    `gorm:"column:user_item_quantity"` //アイテム数量
 }
-//item情報テーブル
-type Item_informtion struct {
-	Iid   string `gorm:"column:item_id"`
-	Iname string `gorm:"column:item_name"`
-}
-
 
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
 type Item_difference struct {
-	Iid string`json:"itemid"`
-	Quantity string `json:"diff"`
-	
+	Iid  string `json:"itemid"`
+	Diff int    `json:"diff"`
 }
 
 func DBconnect() *gorm.DB {
@@ -88,16 +83,22 @@ func GetUserData(u User) User { //ユーザ情報を取得する関数
 	return user
 }
 
-func SetUserItemData(u User, item []) { //クライアントにはアイテム名と更新されたアイテム数をjsonとして渡される前提
+func SetUserItemData(u User, itemDiff []Item_difference) { //クライアントにはアイテム名と更新されたアイテム数をjsonとして渡される前提
 	db := DBconnect()
 
-	// json形式 [{"ItemId":"", Quantity:""}]
-	for i := 0; i < len(item); i++{
-		
+	// json形式 [{"ItemId":string, Quantity:int}]
+	for i := 0; i < len(itemDiff); i++ {
+		UserItemBefore := User_item{}
+		UserItemBefore.Iid = itemDiff[i].Iid
+		UserItemBefore.Uid = u.Id
+
+		UserItemAfter := UserItemBefore
+
+		db.First(&UserItemAfter)
+
+		UserItemAfter.Quantity += itemDiff[i].Diff
+
+		db.Save(&UserItemAfter)
 	}
-
-}
-
-func GetUserItemData(u User) {
 
 }

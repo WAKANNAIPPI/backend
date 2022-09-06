@@ -98,7 +98,7 @@ func SetUserItemData(u User, itemDiff []Item_difference) { //クライアント�
 
 		UserItemAfter.Quantity += itemDiff[i].Diff
 
-		db.Save(&UserItemAfter)
+		db.Model(&UserItemBefore).Where("user_id = ?", u.Id).Where("user_item_id = ?", itemDiff[i].Iid).Update("user_item_quantity", UserItemAfter.Quantity)
 	}
 
 }

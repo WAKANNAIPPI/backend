@@ -28,14 +28,6 @@ create table user_items(
     references users(user_id)
 );
 
-create table item_informations(
-    item_id varchar(60) not null,
-    item_name varchar(60),
-    primary key(item_id),
-    foreign key(item_id)
-    references user_items(user_item_id)
-);
-
 
 
 

@@ -85,7 +85,6 @@ func GetUserData(u User) User { //ユーザ情報を取得する関数
 
 func SetUserItemData(u User, itemDiff []Item_difference) { //クライアントにはアイテム名と更新されたアイテム数をjsonとして渡される前提
 	db := DBconnect()
-
 	// json形式 [{"ItemId":string, Quantity:int}]
 	for i := 0; i < len(itemDiff); i++ {
 		UserItemBefore := User_item{}
@@ -101,4 +100,14 @@ func SetUserItemData(u User, itemDiff []Item_difference) { //クライアント�
 		db.Model(&UserItemBefore).Where("user_id = ?", u.Id).Where("user_item_id = ?", itemDiff[i].Iid).Update("user_item_quantity", UserItemAfter.Quantity)
 	}
 
+}
+
+func GetUserItemData(u User) []User_item {
+	db := DBconnect()
+
+	UserItem := []User_item{}
+
+	db.Find(&UserItem, "user_id=?", u.Id)
+
+	return UserItem
 }

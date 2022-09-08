@@ -25,6 +25,13 @@ type User_item struct {
 	Quantity int    `gorm:"column:user_item_quantity"` //アイテム数量
 }
 
+type User_constellations struct {
+	Cid  string `gorm:"column:user_constellation_id"`   //星座ID
+	Name string `gorm:"column:user_constellation_name"` //星座の名前
+	Uid  string `gorm:"column:user_id"`                 //ユーザーid
+	Data int    `gorm:"column:user_constellation_data"` //星座データ
+}
+
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
 type Item_difference struct {
 	Iid  string `json:"itemid"`

@@ -9,11 +9,11 @@ create table users(
     primary key(user_id) 
 );
 
-create table original_constellations(
-    constellation_id varchar(60) not null,
-    constellation_name varchar(60),
+create table user_constellations(
+    user_constellation_id varchar(60) not null,
+    user_constellation_name varchar(60),
     user_id varchar(60) not null,
-    constellation_data int,
+    user_constellation_data int,
     primary key(constellation_id),
     foreign key(user_id)
     references users(user_id)

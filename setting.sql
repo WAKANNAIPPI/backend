@@ -14,7 +14,7 @@ create table user_constellations(
     user_constellation_name varchar(60),
     user_id varchar(60) not null,
     user_constellation_data int,
-    primary key(constellation_id),
+    primary key(user_constellation_id),
     foreign key(user_id)
     references users(user_id)
 );
@@ -27,7 +27,5 @@ create table user_items(
     foreign key(user_id)
     references users(user_id)
 );
-
-
 
 

@@ -46,7 +46,7 @@ type UserConstellationJson struct {
 
 func DBconnect() *gorm.DB {
 	//iniファイルをロード
-	dbCfg, err := ini.Load("db.ini")
+	dbCfg, err := ini.Load("database/db.ini")
 	if err != nil {
 		log.Panic(err)
 	}

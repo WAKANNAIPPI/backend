@@ -38,10 +38,10 @@ type User_item_json struct {
 	Diff int    `json:"itemDiff"`
 }
 
-type Constellation_json struct {
+type User_Constellation_json struct {
 	Cid  string `json:"constellationId"`
 	Name string `json:"constellationName"`
-	Data string `json:"constellationData"`
+	Data int    `json:"constellationData"`
 }
 
 func DBconnect() *gorm.DB {
@@ -125,7 +125,15 @@ func GetUserItemData(u User) []User_item {
 	return UserItem
 }
 
-func PostUserConstellationData(u User, uc User_constellations) {
+func CreateUserConstellationData(u User, uc User_Constellation_json) {
 	db := DBconnect()
 
+	UserConstellation := User_constellations{}
+
+	UserConstellation.Uid = u.Id
+	UserConstellation.Name = uc.Name
+	UserConstellation.Cid = uc.Cid
+	UserConstellation.Data = uc.Data
+
+	db.Create(&UserConstellation)
 }

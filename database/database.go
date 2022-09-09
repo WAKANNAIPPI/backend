@@ -137,3 +137,13 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) {
 
 	db.Create(&UserConstellation)
 }
+
+func GetUserConstellationData(u User) []User_constellations {
+	db := DBconnect()
+
+	uc := []User_constellations{}
+
+	db.Find(&uc, "user_id=?", u.Id) //あるユーザーの作った星座情報を一括取得
+
+	return uc
+}

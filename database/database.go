@@ -25,15 +25,28 @@ type User_item struct {
 	Quantity int    `gorm:"column:user_item_quantity"` //アイテム数量
 }
 
+type User_constellations struct {
+	Cid  string `gorm:"column:user_constellation_id"`   //星座ID
+	Name string `gorm:"column:user_constellation_name"` //星座の名前
+	Uid  string `gorm:"column:user_id"`                 //ユーザーid
+	Data int    `gorm:"column:user_constellation_data"` //星座データ
+}
+
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
-type Item_difference struct {
-	Iid  string `json:"itemid"`
-	Diff int    `json:"diff"`
+type UserItemJson struct {
+	Iid  string `json:"itemId"`
+	Diff int    `json:"itemDiff"`
+}
+
+type UserConstellationJson struct {
+	Cid  string `json:"constellationId"`
+	Name string `json:"constellationName"`
+	Data int    `json:"constellationData"`
 }
 
 func DBconnect() *gorm.DB {
 	//iniファイルをロード
-	dbCfg, err := ini.Load("db.ini")
+	dbCfg, err := ini.Load("database/db.ini")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -83,7 +96,7 @@ func GetUserData(u User) User { //ユーザ情報を取得する関数
 	return user
 }
 
-func SetUserItemData(u User, itemDiff []Item_difference) { //クライアントにはアイテム名と更新されたアイテム数をjsonとして渡される前提
+func SetUserItemData(u User, itemDiff []UserItemJson) { //クライアントにはアイテム名と更新されたアイテム数をjsonとして渡される前提
 	db := DBconnect()
 	// json形式 [{"ItemId":string, Quantity:int}]
 	for i := 0; i < len(itemDiff); i++ {
@@ -110,4 +123,17 @@ func GetUserItemData(u User) []User_item {
 	db.Find(&UserItem, "user_id=?", u.Id)
 
 	return UserItem
+}
+
+func CreateUserConstellationData(u User, uc UserConstellationJson) {
+	db := DBconnect()
+
+	UserConstellation := User_constellations{}
+
+	UserConstellation.Uid = u.Id
+	UserConstellation.Name = uc.Name
+	UserConstellation.Cid = uc.Cid
+	UserConstellation.Data = uc.Data
+
+	db.Create(&UserConstellation)
 }

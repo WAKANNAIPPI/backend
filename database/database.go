@@ -34,8 +34,14 @@ type User_constellations struct {
 
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
 type Item_difference struct {
-	Iid  string `json:"itemid"`
-	Diff int    `json:"diff"`
+	Iid  string `json:"itemId"`
+	Diff int    `json:"itemDiff"`
+}
+
+type Constellation_json struct {
+	Cid  string `json:"constellationId"`
+	Name string `json:"constellationName"`
+	Data string `json:"constellationData"`
 }
 
 func DBconnect() *gorm.DB {
@@ -117,4 +123,9 @@ func GetUserItemData(u User) []User_item {
 	db.Find(&UserItem, "user_id=?", u.Id)
 
 	return UserItem
+}
+
+func PostUserConstellationData(u User, uc User_constellations) {
+	db := DBconnect()
+
 }

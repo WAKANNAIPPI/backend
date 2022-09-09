@@ -33,7 +33,7 @@ type User_constellations struct {
 }
 
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
-type Item_difference struct {
+type User_item_json struct {
 	Iid  string `json:"itemId"`
 	Diff int    `json:"itemDiff"`
 }
@@ -96,7 +96,7 @@ func GetUserData(u User) User { //ユーザ情報を取得する関数
 	return user
 }
 
-func SetUserItemData(u User, itemDiff []Item_difference) { //クライアントにはアイテム名と更新されたアイテム数をjsonとして渡される前提
+func SetUserItemData(u User, itemDiff []User_item_json) { //クライアントにはアイテム名と更新されたアイテム数をjsonとして渡される前提
 	db := DBconnect()
 	// json形式 [{"ItemId":string, Quantity:int}]
 	for i := 0; i < len(itemDiff); i++ {

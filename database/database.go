@@ -12,24 +12,24 @@ import (
 
 //ユーザテーブル
 type User struct {
-	Id        string `gorm:"column:user_id"`
-	Password  string `gorm:"column:user_password"`
-	Name      string `gorm:"column:user_name"`
-	IsDeleted bool   `gorm:"column:is_deleted"` //論理削除フラグ
+	Id        string `gorm:"column:user_id" json:"userId"`
+	Password  string `gorm:"column:user_password" json:"userPass"`
+	Name      string `gorm:"column:user_name" json:"userName"`
+	IsDeleted bool   `gorm:"column:is_deleted" json:"-"` //論理削除フラグ
 }
 
 //ユーザitem情報テーブル
 type User_item struct {
-	Iid      string `gorm:"column:user_item_id"`       //アイテムid
-	Uid      string `gorm:"column:user_id"`            //ユーザid
-	Quantity int    `gorm:"column:user_item_quantity"` //アイテム数量
+	Iid      string `gorm:"column:user_item_id" json:"itemId"`        //アイテムid
+	Uid      string `gorm:"column:user_id" json:"-"`                  //ユーザid
+	Quantity int    `gorm:"column:user_item_quantity" json:"itemQty"` //アイテム数量
 }
 
 type User_constellations struct {
-	Cid  string `gorm:"column:user_constellation_id"`   //星座ID
-	Name string `gorm:"column:user_constellation_name"` //星座の名前
-	Uid  string `gorm:"column:user_id"`                 //ユーザーid
-	Data int    `gorm:"column:user_constellation_data"` //星座データ
+	Cid  string `gorm:"column:user_constellation_id" json:"consteId"`     //星座ID
+	Name string `gorm:"column:user_constellation_name" json:"consteName"` //星座の名前
+	Uid  string `gorm:"column:user_id" json:"-"`                          //ユーザーid
+	Data int    `gorm:"column:user_constellation_data" json:"consteData"` //星座データ
 }
 
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
@@ -39,9 +39,9 @@ type UserItemJson struct {
 }
 
 type UserConstellationJson struct {
-	Cid  string `json:"constellationId"`
-	Name string `json:"constellationName"`
-	Data int    `json:"constellationData"`
+	Cid  string `json:"consteId"`
+	Name string `json:"consteName"`
+	Data int    `json:"consteData"`
 }
 
 func DBconnect() *gorm.DB {

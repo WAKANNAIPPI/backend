@@ -2,6 +2,7 @@ package model
 
 import (
 	"backend/database"
+	"log"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -12,10 +13,11 @@ import (
 func Userlogin(ctx *gin.Context) {
 	reqUser := database.User{}
 	//クライアントからのjsonデータをユーザー構造体にbinding
-	err := ctx.BindJSON(reqUser)
+	err := ctx.BindJSON(&reqUser)
 
 	if err != nil {
 		ctx.Status(http.StatusBadRequest)
+		log.Println(err)
 	} else {
 
 		pass := reqUser.Password
@@ -26,13 +28,12 @@ func Userlogin(ctx *gin.Context) {
 
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
+			log.Println(err)
 		} else {
 			session := sessions.Default(ctx)
 
-			session.Set("loginUser", reqUser)
+			session.Set("loginUser", reqUser.Id)
 			session.Save()
-
-			ctx.Status(http.StatusOK)
 		}
 	}
 }

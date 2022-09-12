@@ -1,6 +1,8 @@
 package controller
 
 import (
+	model "backend/Model"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -12,7 +14,7 @@ func GetRouter() *gin.Engine {
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
 
-	r.POST("/login/post", model.Userlogin())
+	r.POST("/login/post", model.Userlogin)
 
 	AuthUserGroup := r.Group("/auth")
 	AuthUserGroup.Use(middleware.LoginCheck())

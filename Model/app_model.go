@@ -22,16 +22,20 @@ func Userlogin(ctx *gin.Context) {
 
 		pass := reqUser.Password
 		user := database.GetUserData(reqUser)
+		//DBから取得してきたpasswordはハッシュ値
 		hashPass := user.Password
 
+		//password比較
 		err = bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(pass))
 
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
 			log.Println(err)
 		} else {
+			//sessionのセットアップ
 			session := sessions.Default(ctx)
 
+			//セッションにuserIDを格納
 			session.Set("loginUser", reqUser.Id)
 			session.Save()
 		}

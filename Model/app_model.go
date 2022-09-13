@@ -36,7 +36,7 @@ func Userlogin(ctx *gin.Context) {
 			session := sessions.Default(ctx)
 
 			//セッションにuserIDを格納
-			session.Set("loginUser", reqUser.Id)
+			session.Set("loginUser", user)
 			session.Save()
 		}
 	}

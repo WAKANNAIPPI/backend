@@ -2,6 +2,7 @@ package model
 
 import (
 	"backend/database"
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -36,8 +37,17 @@ func Userlogin(ctx *gin.Context) {
 			session := sessions.Default(ctx)
 
 			//セッションにuserIDを格納
-			session.Set("loginUser", user)
-			session.Save()
+
+			sessionUser, err := json.Marshal(user)
+
+			if err == nil {
+				session.Set("loginUser", string(sessionUser))
+				session.Save()
+
+				log.Println("session Log", session.Get("loginUser"))
+			} else {
+				ctx.Status(http.StatusInternalServerError)
+			}
 		}
 	}
 }

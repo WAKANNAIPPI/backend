@@ -3,6 +3,7 @@ package middleware
 import (
 	"backend/database"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -17,6 +18,9 @@ func LoginCheck(ctx *gin.Context) {
 
 	if err != nil {
 		ctx.Status(http.StatusUnauthorized)
+		log.Println(err)
+		log.Println("dproxy")
+		log.Println(session.Get("loginUser"))
 		ctx.Abort()
 	} else {
 		var UserInfo database.User
@@ -25,6 +29,7 @@ func LoginCheck(ctx *gin.Context) {
 
 		if err != nil {
 			ctx.Status(http.StatusUnauthorized)
+			log.Println("unmarshal")
 			ctx.Abort()
 		} else {
 			ctx.Next()

@@ -15,18 +15,18 @@ func GetRouter() *gin.Engine {
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
 
-	r.POST("/login/", model.Userlogin)
+	r.POST("/login", model.Userlogin)
 
 	AuthUserGroup := r.Group("/auth")
 	AuthUserGroup.Use(middleware.LoginCheck)
 	{
 
-		r.GET("/OrigStar/Get/", model.GetStarData)    //　オリジナル星座のデータをレスポンスするAPI
-		r.GET("/UserItem/Get/", model.GetUserItem)    // ユーザーのアイテムデータをレスポンスするAPI
-		r.POST("/UserItem/Post/", model.PostUserItem) // ユーザーのアイテムデータ更新内容を受け取るAPI
-		r.GET("/Quize/Get/", model.QuizeGet)          // クイズデータをランダムに返すAPI
-		r.GET("/Pub/", model.Pub)                     // サーバー側からのイベントをレスポンスするAPI
-		r.POST("/OrigStar/Post/", model.PostStarData)
+		AuthUserGroup.GET("/OrigStar/Get", model.GetStarData)    //　オリジナル星座のデータをレスポンスするAPI
+		AuthUserGroup.GET("/UserItem/Get", model.GetUserItem)    // ユーザーのアイテムデータをレスポンスするAPI
+		AuthUserGroup.POST("/UserItem/Post", model.PostUserItem) // ユーザーのアイテムデータ更新内容を受け取るAPI
+		AuthUserGroup.GET("/Quize/Get", model.QuizeGet)          // クイズデータをランダムに返すAPI
+		AuthUserGroup.GET("/Pub", model.Pub)                     // サーバー側からのイベントをレスポンスするAPI
+		AuthUserGroup.POST("/OrigStar/Post", model.PostStarData) //オリジナル星座データを登録するAPI
 	}
 
 	return r

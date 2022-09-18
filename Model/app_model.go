@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/koron/go-dproxy"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -37,7 +38,8 @@ func Userlogin(ctx *gin.Context) {
 			session := sessions.Default(ctx)
 
 			//セッションにuserIDを格納
-
+			log.Println("userdata:", user)
+			log.Println("reqdata:", reqUser)
 			sessionUser, err := json.Marshal(user)
 
 			if err == nil {
@@ -50,4 +52,29 @@ func Userlogin(ctx *gin.Context) {
 			}
 		}
 	}
+}
+
+func GetUserItem(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+
+	//構造体インスタンスの生成
+	user := database.User{}
+
+	//sessionから取ったユーザ情報の構造体へのマッピング
+	userJson, err := dproxy.New(session.Get("loginUser")).String()
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+	err = json.Unmarshal([]byte(userJson), &user)
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+
+	//dbからuserItem情報を取得してjson形式で返却
+	userItems := database.GetUserItemData(user)
+	log.Println(user, ":", userItems)
+
+	ctx.JSON(200, userItems)
 }

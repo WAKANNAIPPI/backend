@@ -88,10 +88,11 @@ func GetUserData(u User) User { //ユーザ情報を取得する関数
 	db := DBconnect()
 	//UserIDを入れてレコードを特定
 	user := User{}
-	user.Id = u.Id
-
 	//単一レコードを引っ張ってくる
-	db.First(&user)
+	db.Where("user_id = ?", u.Id).First(&user)
+
+	log.Println("databaseReqUser:", u)
+	log.Println("databaseUser:", user)
 
 	return user
 }

@@ -78,3 +78,35 @@ func GetUserItem(ctx *gin.Context) {
 
 	ctx.JSON(200, userItems)
 }
+
+func PostUserItem(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+
+	//構造体インスタンスの生成
+	user := database.User{}
+
+	//sessionから取ったユーザ情報の構造体へのマッピング
+	userJson, err := dproxy.New(session.Get("loginUser")).String()
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+	err = json.Unmarshal([]byte(userJson), &user)
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+
+	var ItemDiff []database.UserItemJson
+
+	err = ctx.BindJSON(&ItemDiff)
+
+	log.Println(ItemDiff)
+
+	if err != nil {
+		ctx.Status(http.StatusBadRequest)
+		ctx.Abort()
+	}
+
+	database.SetUserItemData(user, ItemDiff)
+}

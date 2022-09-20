@@ -107,9 +107,13 @@ func SetUserItemData(u User, itemDiff []UserItemJson) { //クライアントに�
 
 		UserItemAfter := UserItemBefore
 
-		db.First(&UserItemAfter)
+		log.Println("1:", UserItemAfter)
+
+		db.Where("user_item_id = ?", itemDiff[i].Iid).Where("user_id = ?", u.Id).First(&UserItemAfter)
+		log.Println("2", UserItemAfter)
 
 		UserItemAfter.Quantity += itemDiff[i].Diff
+		log.Println("itemQuantity = ", UserItemAfter)
 
 		db.Model(&UserItemBefore).Where("user_id = ?", u.Id).Where("user_item_id = ?", itemDiff[i].Iid).Update("user_item_quantity", UserItemAfter.Quantity)
 	}

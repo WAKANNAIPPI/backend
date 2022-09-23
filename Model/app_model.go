@@ -110,3 +110,26 @@ func PostUserItem(ctx *gin.Context) {
 
 	database.SetUserItemData(user, ItemDiff)
 }
+
+func GetConsteData(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+
+	//構造体インスタンスの生成
+	user := database.User{}
+
+	//sessionから取ったユーザ情報の構造体へのマッピング
+	userJson, err := dproxy.New(session.Get("loginUser")).String()
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+	err = json.Unmarshal([]byte(userJson), &user)
+	if err != nil {
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+
+	userconste := database.GetUserConstellationData(user)
+
+	ctx.JSON(200, userconste)
+}

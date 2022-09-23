@@ -26,7 +26,7 @@ func GetRouter() *gin.Engine {
 		AuthUserGroup.POST("/UserItem/Post", model.PostUserItem)  // ユーザーのアイテムデータ更新内容を受け取るAPI
 		//AuthUserGroup.GET("/Quize/Get", model.QuizeGet)          // クイズデータをランダムに返すAPI
 		//AuthUserGroup.GET("/Pub", model.Pub)                     // サーバー側からのイベントをレスポンスするAPI
-		//AuthUserGroup.POST("/OrigStar/Post", model.PostStarData) //オリジナル星座データを登録するAPI
+		AuthUserGroup.POST("/OrigConste/Post", model.PostConsteData) //オリジナル星座データを登録するAPI
 	}
 
 	return r

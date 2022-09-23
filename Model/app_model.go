@@ -58,19 +58,8 @@ func GetUserItem(ctx *gin.Context) {
 	session := sessions.Default(ctx)
 
 	//構造体インスタンスの生成
-	user := database.User{}
-
 	//sessionから取ったユーザ情報の構造体へのマッピング
-	userJson, err := dproxy.New(session.Get("loginUser")).String()
-	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
-		ctx.Abort()
-	}
-	err = json.Unmarshal([]byte(userJson), &user)
-	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
-		ctx.Abort()
-	}
+	user := sessionCheck(session, ctx)
 
 	//dbからuserItem情報を取得してjson形式で返却
 	userItems := database.GetUserItemData(user)
@@ -83,23 +72,12 @@ func PostUserItem(ctx *gin.Context) {
 	session := sessions.Default(ctx)
 
 	//構造体インスタンスの生成
-	user := database.User{}
-
 	//sessionから取ったユーザ情報の構造体へのマッピング
-	userJson, err := dproxy.New(session.Get("loginUser")).String()
-	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
-		ctx.Abort()
-	}
-	err = json.Unmarshal([]byte(userJson), &user)
-	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
-		ctx.Abort()
-	}
+	user := sessionCheck(session, ctx)
 
 	var ItemDiff []database.UserItemJson
 
-	err = ctx.BindJSON(&ItemDiff)
+	err := ctx.BindJSON(&ItemDiff)
 
 	log.Println(ItemDiff)
 
@@ -115,9 +93,36 @@ func GetConsteData(ctx *gin.Context) {
 	session := sessions.Default(ctx)
 
 	//構造体インスタンスの生成
+	//sessionから取ったユーザ情報の構造体へのマッピング
+	user := sessionCheck(session, ctx)
+
+	userconste := database.GetUserConstellationData(user)
+
+	ctx.JSON(200, userconste)
+}
+
+func PostConsteData(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+
+	user := sessionCheck(session, ctx)
+
+	var ConsteData database.UserConstellationJson
+
+	err := ctx.BindJSON(&ConsteData)
+
+	if err != nil {
+		ctx.Status(http.StatusBadRequest)
+		log.Println(err)
+		ctx.Abort()
+	}
+
+	database.CreateUserConstellationData(user, ConsteData)
+
+}
+
+func sessionCheck(session sessions.Session, ctx *gin.Context) database.User {
 	user := database.User{}
 
-	//sessionから取ったユーザ情報の構造体へのマッピング
 	userJson, err := dproxy.New(session.Get("loginUser")).String()
 	if err != nil {
 		ctx.Status(http.StatusInternalServerError)
@@ -128,8 +133,5 @@ func GetConsteData(ctx *gin.Context) {
 		ctx.Status(http.StatusInternalServerError)
 		ctx.Abort()
 	}
-
-	userconste := database.GetUserConstellationData(user)
-
-	ctx.JSON(200, userconste)
+	return user
 }

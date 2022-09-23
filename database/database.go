@@ -130,7 +130,7 @@ func GetUserItemData(u User) []User_item {
 	return UserItem
 }
 
-func CreateUserConstellationData(u User, uc UserConstellationJson) {
+func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	db := DBconnect()
 
 	UserConstellation := User_constellations{}
@@ -140,7 +140,9 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) {
 	UserConstellation.Cid = uc.Cid
 	UserConstellation.Data = uc.Data
 
-	db.Create(&UserConstellation)
+	err := db.Debug().Create(&UserConstellation).Error
+
+	return err
 }
 
 func GetUserConstellationData(u User) []User_constellations {

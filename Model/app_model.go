@@ -116,7 +116,13 @@ func PostConsteData(ctx *gin.Context) {
 		ctx.Abort()
 	}
 
-	database.CreateUserConstellationData(user, ConsteData)
+	err = database.CreateUserConstellationData(user, ConsteData)
+
+	if err != nil {
+		ctx.Status(http.StatusBadRequest)
+		log.Println("primary key:", err)
+		ctx.String(400, "PrimaryKeyError!もう一度試してください") //クライアントにここは実装したいですと伝える
+	}
 
 }
 

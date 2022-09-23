@@ -3,6 +3,7 @@ package model
 import (
 	"backend/database"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -108,11 +109,17 @@ func PostConsteData(ctx *gin.Context) {
 
 	var ConsteData database.UserConstellationJson
 
-	err := ctx.BindJSON(&ConsteData)
+	//なぜかbindJsonで出来なかったので直接ボディを読んでバインディングを実行
+	buf := make([]byte, 2048)
+	n, _ := ctx.Request.Body.Read(buf)
+	b := string(buf[0:n])
+	log.Println("string:", b)
+	b = fmt.Sprintf("{%s}", b)
+	err := json.Unmarshal([]byte(b), &ConsteData)
 
 	if err != nil {
 		ctx.Status(http.StatusBadRequest)
-		log.Println(err)
+		log.Println("err:", err)
 		ctx.Abort()
 	}
 

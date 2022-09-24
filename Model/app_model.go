@@ -4,11 +4,15 @@ import (
 	"backend/database"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/jszwec/csvutil"
 	"github.com/koron/go-dproxy"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -130,6 +134,36 @@ func PostConsteData(ctx *gin.Context) {
 		log.Println("primary key:", err)
 		ctx.String(400, "PrimaryKeyError!もう一度試してください") //クライアントにここは実装したいですと伝える
 	}
+
+}
+
+func QuizeGet(ctx *gin.Context) {
+	var Quize []database.QuizeDataJson
+
+	//csvファイル読み込み
+	b, err := ioutil.ReadFile("database/quize.csv")
+
+	if err != nil {
+		log.Println("csv read err:", err)
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+
+	//csvデータを構造体にマッピング
+	err = csvutil.Unmarshal(b, &Quize)
+
+	if err != nil {
+		log.Println("Unmarshal err:", err)
+		ctx.Status(http.StatusInternalServerError)
+		ctx.Abort()
+	}
+
+	//乱数の生成
+	rand.Seed(time.Now().UnixNano())
+
+	i := rand.Intn(100) % len(Quize)
+
+	ctx.JSON(200, Quize[i])
 
 }
 

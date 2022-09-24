@@ -24,7 +24,7 @@ func GetRouter() *gin.Engine {
 		AuthUserGroup.GET("/OrigConste/Get", model.GetConsteData) //　オリジナル星座のデータをレスポンスするAPI
 		AuthUserGroup.GET("/UserItem/Get", model.GetUserItem)     // ユーザーのアイテムデータをレスポンスするAPI
 		AuthUserGroup.POST("/UserItem/Post", model.PostUserItem)  // ユーザーのアイテムデータ更新内容を受け取るAPI
-		//AuthUserGroup.GET("/Quize/Get", model.QuizeGet)          // クイズデータをランダムに返すAPI
+		AuthUserGroup.GET("/Quize/Get", model.QuizeGet)           // クイズデータをランダムに返すAPI
 		//AuthUserGroup.GET("/Pub", model.Pub)                     // サーバー側からのイベントをレスポンスするAPI
 		AuthUserGroup.POST("/OrigConste/Post", model.PostConsteData) //オリジナル星座データを登録するAPI
 	}

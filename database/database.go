@@ -44,6 +44,15 @@ type UserConstellationJson struct {
 	Data int    `json:"consteData"`
 }
 
+type QuizeDataJson struct {
+	No       int    `json:"quizeNumber"`
+	Question string `json:"question"`
+	Choice1  string `json:"choice1"`
+	Choice2  string `json:"choice2"`
+	Choice3  string `json:"choice3"`
+	Ans      int    `json:"ans"`
+}
+
 func DBconnect() *gorm.DB {
 	//iniファイルをロード
 	dbCfg, err := ini.Load("database/db.ini")

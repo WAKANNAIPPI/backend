@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jszwec/csvutil"
 	"github.com/koron/go-dproxy"
+	"github.com/olahol/melody"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -181,4 +182,15 @@ func sessionCheck(session sessions.Session, ctx *gin.Context) database.User {
 		ctx.Abort()
 	}
 	return user
+}
+
+func EventFlag(ctx *gin.Context) {
+	m := melody.New()
+	//クライアントIpが127.0.0.1ならばブロードキャスト実行
+	cliantIp := ctx.ClientIP()
+
+	if cliantIp == "127.0.0.1" {
+		//イベントフラグをws接続中の全クライアントに送信、値はuint8の「1」
+		m.Broadcast([]byte{1})
+	}
 }

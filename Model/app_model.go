@@ -192,5 +192,19 @@ func EventFlag(ctx *gin.Context) {
 	if cliantIp == "127.0.0.1" {
 		//イベントフラグをws接続中の全クライアントに送信、値はuint8の「1」
 		m.Broadcast([]byte{1})
+	} else {
+		ctx.Status(http.StatusBadRequest)
+		ctx.String(400, "ここにはlocalhost以外アクセスしてくんなよwwwwwwwww")
+	}
+}
+
+func WsConnect(ctx *gin.Context) {
+	//ws接続確立
+	m := melody.New()
+
+	err := m.HandleRequest(ctx.Writer, ctx.Request)
+
+	if err != nil {
+		log.Println(err)
 	}
 }

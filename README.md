@@ -52,16 +52,18 @@ routingはlogin済みのユーザーのみアクセスできるAPIがありま�
 
 # 各種API
 ## loginAPI
-ユーザーloginする時のAPIです<br><br>
-アクセスURL
+### 概要
+ユーザーloginする時のAPIです<br>
+sessionでログインユーザーを管理するので、クライアントはcookie管理ができるライブラリなりを使ってください<br>
+### アクセスURL
 ```URL
 http://serverName:8080/login
 ```
-リクエストbody(Json)
+### リクエストbody(Json)
 ```
 {"userId":"User", "userPass":"Password"}
 ```
-httpステータス<br>
+### httpステータス<br>
 リクエスト時、httpレスポンスステータスコードは以下の3種類です<br>
 クライアントのエラーハンドリングに役立ててください<br>
 | httpstatus | 状態 |
@@ -69,6 +71,9 @@ httpステータス<br>
 |    200     | 成功 |
 |    400     | login失敗<br>(passwordが違う,等)|
 |    500     | login失敗<br>(サーバ側の問題)|
+
+## オリジナル星座取得API
+### オリジナル星座を一括で取得
 
 
 

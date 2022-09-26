@@ -21,6 +21,8 @@ func GetRouter() *gin.Engine {
 	r.GET("/ws/Event", model.WsConnect) //ws確立用のAPI
 	r.POST("/login", model.Userlogin)   //loginAPI
 
+	//ここから先のAPIはログイン済みのユーザでないとアクセスできない。
+	//sessionの使用が必要
 	AuthUserGroup := r.Group("/auth")
 	AuthUserGroup.Use(middleware.LoginCheck)
 	{

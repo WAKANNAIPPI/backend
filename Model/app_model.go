@@ -37,7 +37,7 @@ func Userlogin(ctx *gin.Context) {
 		err = bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(pass))
 
 		if err != nil {
-			ctx.Status(http.StatusBadRequest)
+			ctx.Status(http.StatusUnauthorized)
 			log.Println(err)
 		} else {
 			//sessionのセットアップ
@@ -173,12 +173,12 @@ func sessionCheck(session sessions.Session, ctx *gin.Context) database.User {
 
 	userJson, err := dproxy.New(session.Get("loginUser")).String()
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		ctx.Status(http.StatusUnauthorized)
 		ctx.Abort()
 	}
 	err = json.Unmarshal([]byte(userJson), &user)
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		ctx.Status(http.StatusUnauthorized)
 		ctx.Abort()
 	}
 	return user
@@ -193,8 +193,8 @@ func EventFlag(ctx *gin.Context) {
 		//イベントフラグをws接続中の全クライアントに送信、値はuint8の「1」
 		m.Broadcast([]byte{1})
 	} else {
-		ctx.Status(http.StatusBadRequest)
-		ctx.String(400, "ここにはlocalhost以外アクセスしてくんなよwwwwwwwww")
+		ctx.Status(http.StatusUnauthorized)
+		ctx.String(401, "ここにはlocalhost以外アクセス出来ません")
 	}
 }
 

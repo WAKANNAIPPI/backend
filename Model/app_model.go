@@ -14,6 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jszwec/csvutil"
 	"github.com/koron/go-dproxy"
+	"github.com/olahol/melody"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -36,7 +37,7 @@ func Userlogin(ctx *gin.Context) {
 		err = bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(pass))
 
 		if err != nil {
-			ctx.Status(http.StatusBadRequest)
+			ctx.Status(http.StatusUnauthorized)
 			log.Println(err)
 		} else {
 			//sessionのセットアップ
@@ -172,13 +173,38 @@ func sessionCheck(session sessions.Session, ctx *gin.Context) database.User {
 
 	userJson, err := dproxy.New(session.Get("loginUser")).String()
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		ctx.Status(http.StatusUnauthorized)
 		ctx.Abort()
 	}
 	err = json.Unmarshal([]byte(userJson), &user)
 	if err != nil {
-		ctx.Status(http.StatusInternalServerError)
+		ctx.Status(http.StatusUnauthorized)
 		ctx.Abort()
 	}
 	return user
+}
+
+func EventFlag(ctx *gin.Context) {
+	m := melody.New()
+	//クライアントIpが127.0.0.1ならばブロードキャスト実行
+	cliantIp := ctx.ClientIP()
+
+	if cliantIp == "127.0.0.1" {
+		//イベントフラグをws接続中の全クライアントに送信、値はuint8の「1」
+		m.Broadcast([]byte{1})
+	} else {
+		ctx.Status(http.StatusUnauthorized)
+		ctx.String(401, "ここにはlocalhost以外アクセス出来ません")
+	}
+}
+
+func WsConnect(ctx *gin.Context) {
+	//ws接続確立
+	m := melody.New()
+
+	err := m.HandleRequest(ctx.Writer, ctx.Request)
+
+	if err != nil {
+		log.Println(err)
+	}
 }

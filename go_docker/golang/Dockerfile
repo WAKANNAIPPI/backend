@@ -7,6 +7,7 @@ RUN  apk update && apk add git
 
 EXPOSE 8080
 
+COPY ./aiueo.txt /tmp
 ENV ROOT=backend
 WORKDIR ${ROOT}
 

@@ -1,13 +1,13 @@
 package model
 
 import (
-	"backend/database"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
+	"src/database"
 	"time"
 
 	"github.com/gin-contrib/sessions"

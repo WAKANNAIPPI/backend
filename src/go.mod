@@ -1,4 +1,4 @@
-module backend
+module src
 
 go 1.18
 

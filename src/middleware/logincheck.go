@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"backend/database"
 	"encoding/json"
 	"log"
 	"net/http"
+	"src/database"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"

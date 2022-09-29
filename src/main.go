@@ -1,6 +1,6 @@
 package main
 
-import controller "backend/Controller"
+import controller "src/Controller"
 
 func main() {
 	r := controller.GetRouter()

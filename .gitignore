@@ -1,2 +1,3 @@
-backend/src/database/db.ini
+src/database/db.ini
 cookie.txt
+main.go

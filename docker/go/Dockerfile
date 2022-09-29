@@ -12,4 +12,5 @@ COPY  ./ /tmp/
 ENV ROOT=/tmp/backend
 WORKDIR ${ROOT}
 
-# CMD [ "/bin/bash" ]
+CMD [ "go", "run", "main.go" ]
+

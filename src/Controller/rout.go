@@ -1,8 +1,8 @@
 package controller
 
 import (
-	model "backend/Model"
-	"backend/middleware"
+	model "src/Model"
+	"src/middleware"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"

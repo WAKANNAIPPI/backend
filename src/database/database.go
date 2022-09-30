@@ -3,7 +3,6 @@ package database
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/ini.v1"
@@ -56,21 +55,16 @@ type QuizeDataJson struct {
 
 func DBconnect() *gorm.DB {
 	//iniファイルをロード
-	dbCfg, err := ini.Load("./../database/db.ini")
+	dbCfg, err := ini.Load("database/db.ini")
 	if err != nil {
 		log.Panic(err)
 	}
-
-	aiueo := os.Getenv("MYSQL_ROOT_PASSWORD")
-
-	log.Println(aiueo)
 
 	//GormのアクセスURLを代入
 	GormInfo := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		dbCfg.Section("db").Key("dbUserName").String(),
-		//os.Getenv("MYSQL_ROOT_PASSWORD"),
-		"Niimu216",
+		dbCfg.Section("db").Key("dbUserPass").String(),
 		dbCfg.Section("db").Key("dbHost").String(),
 		dbCfg.Section("db").Key("dbPort").String(),
 		dbCfg.Section("db").Key("dbName").String(),

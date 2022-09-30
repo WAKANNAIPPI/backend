@@ -8,6 +8,5 @@ RUN  apk update && apk add git
 
 EXPOSE 8080
 
-COPY  ./ /tmp/
-ENV ROOT=/tmp/backend
+ENV ROOT=/go/src
 WORKDIR ${ROOT}

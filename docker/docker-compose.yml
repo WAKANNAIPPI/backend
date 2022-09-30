@@ -1,0 +1,48 @@
+services:
+  go:
+    container_name: wakannaippi_go
+    build:
+      context: ./go
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 8080:8080
+    
+    env_file:
+      - ./mysql/db.env
+    depends_on:
+      - db
+    volumes:
+      - type: bind
+        source: ./../src
+        target: /go/src
+    networks:
+      - wakannaippi_network
+
+    
+  db:
+    image: mysql:latest
+    container_name: wakannaippi_db
+    env_file:
+      - ./mysql/db.env
+    ports:
+      - 3306:3306
+    volumes:   
+      - type: bind
+        source: "./mysql/my.conf"
+        target: "/etc/mysql/conf.d/my.cnf"
+      - type: bind
+        source: "./mysql/init"
+        target: "/docker-entrypoint-initdb.d"
+    networks:
+      - wakannaippi_network
+
+networks:
+  wakannaippi_network:
+
+volumes:
+  wakannaippi_mysql_volume:
+    name: wakannaippi_mysql_volume
+
+
+

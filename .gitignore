@@ -1,3 +1,3 @@
 src/database/db.ini
 cookie.txt
-docker/mysql/.env
+docker/mysql/db.env

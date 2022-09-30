@@ -11,6 +11,3 @@ EXPOSE 8080
 COPY  ./ /tmp/
 ENV ROOT=/tmp/backend
 WORKDIR ${ROOT}
-
-CMD [ "go", "run", "main.go" ]
-

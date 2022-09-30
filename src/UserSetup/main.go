@@ -1,6 +1,6 @@
 package main
 
-import "backend/database"
+import "src/database"
 
 func main() {
 

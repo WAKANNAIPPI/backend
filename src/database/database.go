@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/ini.v1"
@@ -64,8 +65,8 @@ func DBconnect() *gorm.DB {
 	GormInfo := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		dbCfg.Section("db").Key("dbUserName").String(),
-		dbCfg.Section("db").Key("dbUserPass").String(),
-		dbCfg.Section("db").Key("dbHost").String(),
+		os.Getenv("MYSQL_ROOT_PASSWORD"),
+		os.Getenv("MYSQL_HOST"),
 		dbCfg.Section("db").Key("dbPort").String(),
 		dbCfg.Section("db").Key("dbName").String(),
 	)

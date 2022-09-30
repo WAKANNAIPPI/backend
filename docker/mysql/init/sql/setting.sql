@@ -1,5 +1,3 @@
-create database wakannaippi;
-use wakannaippi;
 
 create table users(
     user_id varchar(60) not null,

@@ -1,2 +1,3 @@
-golang/src/database/db.ini
+src/database/db.ini
 cookie.txt
+docker/mysql/db.env

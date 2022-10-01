@@ -105,4 +105,33 @@ httpレスポンスステータスコードは以下の3種類です<br>
 
 
 
+# docker環境使い方
+## 設定ファイル
+backend/docker/mysql/db.envを作成し、下のテンプレを保存
+```
+MYSQL_DATABASE=wakannaippi
+MYSQL_ROOT_PASSWORD=****(任意の文字列)
+MYSQL_HOST=wakannaippi_db
+TZ='Asia/Tokyo'
+```
+## 起動
+backend/dockerに移動して、下のコマンドを実行
+```
+docker-compose up -d
+```
 
+## サーバアプリケーション実行
+コンテナ内のshellに移動
+```
+docker exec -it wakannaippi_go sh
+```
+ユーザーセットアップ<br>
+src/UserSetup  [コンテナ内]
+```
+go run main.go
+```
+サーバ起動<br>
+src/cmd [コンテナ内]
+```
+go run main.go
+```

@@ -1,4 +1,4 @@
-
+use wakannaippi;
 create table users(
     user_id varchar(60) not null,
     user_name varchar(60) not null,

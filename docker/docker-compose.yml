@@ -21,19 +21,23 @@ services:
 
     
   db:
-    image: mysql:latest
     container_name: wakannaippi_db
-    env_file:
-      - ./mysql/db.env
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    platform: linux/x86_64
+    tty: true
     ports:
       - 3306:3306
+    env_file:
+      - ./mysql/db.env
     volumes:   
+      - type: volume
+        source: mysql-data
+        target: /var/lib/mysql
       - type: bind
-        source: "./mysql/my.conf"
-        target: "/etc/mysql/conf.d/my.cnf"
-      - type: bind
-        source: "./mysql/init"
-        target: "/docker-entrypoint-initdb.d"
+        source: ./mysql/init
+        target: /docker-entrypoint-initdb.d
     networks:
       - wakannaippi_network
 
@@ -41,8 +45,8 @@ networks:
   wakannaippi_network:
 
 volumes:
-  wakannaippi_mysql_volume:
-    name: wakannaippi_mysql_volume
+  mysql-data:
+    name: mysql-volume
 
 
 

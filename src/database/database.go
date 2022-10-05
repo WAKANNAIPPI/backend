@@ -51,6 +51,7 @@ type QuizeDataJson struct {
 	Choice1  string `json:"choice1"`
 	Choice2  string `json:"choice2"`
 	Choice3  string `json:"choice3"`
+	Choice4  string `json:"choice4"`
 	Ans      int    `json:"ans"`
 }
 

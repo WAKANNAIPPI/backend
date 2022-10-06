@@ -26,4 +26,21 @@ create table user_items(
     references users(user_id)
 );
 
+create table conste_stars(
+    id int AUTO_INCREMENT,
+    user_constellation_id varchar(60) not null,
+    conste_stored_star json,
+    foreign key(user_constellation_id)
+    references user_constellation_id(user_constellation_id),
+    primary key(id)
+);
+create table conste_lines(
+    id int AUTO_INCREMENT,
+    user_constellation_id varchar(60) not null,
+    conste_stored_line json,
+    foreign key(user_constellation_id)
+    references user_constellation_id(user_constellation_id),
+    primary key(id)
+);
+
 

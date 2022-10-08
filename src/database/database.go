@@ -26,23 +26,48 @@ type User_item struct {
 	Quantity int    `gorm:"column:user_item_quantity" json:"itemQty"` //アイテム数量
 }
 
-type User_constellations struct {
-	Cid  string `gorm:"column:user_constellation_id" json:"consteId"`     //星座ID
-	Name string `gorm:"column:user_constellation_name" json:"consteName"` //星座の名前
-	Uid  string `gorm:"column:user_id" json:"-"`                          //ユーザーid
-	Data int    `gorm:"column:user_constellation_data" json:"consteData"` //星座データ
-}
-
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
 type UserItemJson struct {
 	Iid  string `json:"itemId"`
 	Diff int    `json:"itemDiff"`
 }
 
+type User_constellations struct {
+	Cid  string `gorm:"column:user_constellation_id" json:"consteId"`     //星座ID
+	Name string `gorm:"column:user_constellation_name" json:"consteName"` //星座の名前
+	Uid  string `gorm:"column:user_id" json:"-"`                          //ユーザーid
+}
+
+type Conste_star struct {
+	Id    string      `gorm:"column:id" json:"-"`
+	Cid   string      `gorm:"column:user_constellation_id" json:"-"`
+	SStar StoredStars `gorm:"column:conste_stored_star" json:"storedStars"`
+}
+
+type Conste_line struct {
+	Id     string      `gorm:"column:id" json:"-"`
+	Cid    string      `gorm:"column:conste_stored_star" json:"-"`
+	SLines StoredLines `gorm:"column:conste_lines" json:"storedLines"`
+}
+
 type UserConstellationJson struct {
-	Cid  string `json:"consteId"`
-	Name string `json:"consteName"`
-	Data int    `json:"consteData"`
+	Cid   string      `json:"consteId"`
+	Name  string      `json:"consteName"`
+	Stars StoredStars `json:"storedStars"`
+	Lines StoredLines `json:"storedLines"`
+}
+
+type StoredStars struct {
+	StarItemId    int `json:"starItemId"`
+	StarLocationX int `json:"starLocationX"`
+	StarLocationY int `json:"starLocationY"`
+}
+
+type StoredLines struct {
+	Sx string `json:"sx"`
+	Sy string `json:"sy"`
+	Fx string `json:"fx"`
+	Fy string `json:"fy"`
 }
 
 type QuizeDataJson struct {
@@ -149,7 +174,6 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	UserConstellation.Uid = u.Id
 	UserConstellation.Name = uc.Name
 	UserConstellation.Cid = uc.Cid
-	UserConstellation.Data = uc.Data
 
 	err := db.Debug().Create(&UserConstellation).Error
 

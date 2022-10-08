@@ -34,37 +34,39 @@ type UserItemJson struct {
 	Diff int    `json:"itemDiff"`
 }
 
-type User_constellations struct {
+type User_constellations struct { //オリジナル星座基本情報
 	Cid  string `gorm:"column:user_constellation_id" json:"consteId"`     //星座ID
 	Name string `gorm:"column:user_constellation_name" json:"consteName"` //星座の名前
 	Uid  string `gorm:"column:user_id" json:"-"`                          //ユーザーid
 }
 
-type Conste_star struct {
+type Conste_star struct { //オリジナル星座星情報
 	Id    string      `gorm:"column:id" json:"-"`
 	Cid   string      `gorm:"column:user_constellation_id" json:"-"`
 	SStar StoredStars `gorm:"column:conste_stored_star" json:"storedStars"`
 }
 
-type Conste_line struct {
+type Conste_line struct { //オリジナル星座線情報
 	Id     string      `gorm:"column:id" json:"-"`
 	Cid    string      `gorm:"column:conste_stored_star" json:"-"`
 	SLines StoredLines `gorm:"column:conste_lines" json:"storedLines"`
 }
 
-type UserConstellationJson struct {
+type UserConstellationJson struct { //クライアントに返すJson
 	Cid   string        `json:"consteId"`
 	Name  string        `json:"consteName"`
 	Stars []StoredStars `json:"storedStars"`
 	Lines []StoredLines `json:"storedLines"`
 }
 
+//星情報詳細
 type StoredStars struct {
 	StarItemId    int `json:"starItemId"`
 	StarLocationX int `json:"starLocationX"`
 	StarLocationY int `json:"starLocationY"`
 }
 
+//線情報詳細
 type StoredLines struct {
 	Sx string `json:"sx"`
 	Sy string `json:"sy"`
@@ -72,6 +74,7 @@ type StoredLines struct {
 	Fy string `json:"fy"`
 }
 
+//クイズデータ
 type QuizeDataJson struct {
 	No       int    `json:"quizeNumber"`
 	Question string `json:"question"`
@@ -171,14 +174,18 @@ func GetUserItemData(u User) []User_item {
 func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	db := DBconnect()
 
+	//オリジナル星座の基本情報を追加
 	UserConstellation := User_constellations{}
 
 	UserConstellation.Uid = u.Id
 	UserConstellation.Name = uc.Name
 	UserConstellation.Cid = uc.Cid
 
-	err := db.Debug().Create(&UserConstellation).Error
+	//オリジナル星座の星情報を追加
 
+	CStar := []Conste_star{}
+
+	err := db.Debug().Create(&UserConstellation).Error
 	return err
 }
 

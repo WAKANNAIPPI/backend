@@ -174,18 +174,31 @@ func GetUserItemData(u User) []User_item {
 func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	db := DBconnect()
 
-	//オリジナル星座の基本情報を追加
+	//各インスタンスの作成
 	UserConstellation := User_constellations{}
+	CStar := Conste_star{}
+	CLine := Conste_line{}
 
+	//オリジナル星座の基本情報を追加
 	UserConstellation.Uid = u.Id
 	UserConstellation.Name = uc.Name
 	UserConstellation.Cid = uc.Cid
+	err := db.Debug().Create(&UserConstellation).Error
 
 	//オリジナル星座の星情報を追加
+	CStar.Cid = uc.Cid
+	for _, e := range uc.Stars {
+		CStar.SStar = e
+		db.Debug().Create(&CStar)
+	}
 
-	CStar := []Conste_star{}
+	//オリジナル星座の線情報を追加
+	CLine.Cid = uc.Cid
+	for _, e := range uc.Lines {
+		CLine.SLines = e
+		db.Debug().Create(&CLine)
+	}
 
-	err := db.Debug().Create(&UserConstellation).Error
 	return err
 }
 

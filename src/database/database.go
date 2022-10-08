@@ -53,10 +53,10 @@ type Conste_line struct {
 }
 
 type UserConstellationJson struct {
-	Cid   string      `json:"consteId"`
-	Name  string      `json:"consteName"`
-	Stars StoredStars `json:"storedStars"`
-	Lines StoredLines `json:"storedLines"`
+	Cid   string        `json:"consteId"`
+	Name  string        `json:"consteName"`
+	Stars []StoredStars `json:"storedStars"`
+	Lines []StoredLines `json:"storedLines"`
 }
 
 type StoredStars struct {

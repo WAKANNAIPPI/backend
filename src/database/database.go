@@ -41,33 +41,33 @@ type User_constellation struct { //オリジナル星座基本情報
 }
 
 type Conste_star struct { //オリジナル星座星情報
-	Id    string      `gorm:"column:id" json:"-"`
-	Cid   string      `gorm:"column:user_constellation_id" json:"-"`
-	SStar StoredStars `gorm:"column:conste_stored_star" json:"storedStars"`
+	Id    string     `gorm:"column:id" json:"-"`
+	Cid   string     `gorm:"column:user_constellation_id" json:"-"`
+	SStar StoredStar `gorm:"column:conste_stored_star" json:"StoredStar"`
 }
 
 type Conste_line struct { //オリジナル星座線情報
-	Id     string      `gorm:"column:id" json:"-"`
-	Cid    string      `gorm:"column:conste_stored_star" json:"-"`
-	SLines StoredLines `gorm:"column:conste_lines" json:"storedLines"`
+	Id     string     `gorm:"column:id" json:"-"`
+	Cid    string     `gorm:"column:conste_stored_star" json:"-"`
+	SLines StoredLine `gorm:"column:conste_lines" json:"StoredLine"`
 }
 
 type UserConstellationJson struct { //クライアントに返すJson
-	Cid   string        `json:"consteId"`
-	Name  string        `json:"consteName"`
-	Stars []StoredStars `json:"storedStars"`
-	Lines []StoredLines `json:"storedLines"`
+	Cid   string       `json:"consteId"`
+	Name  string       `json:"consteName"`
+	Stars []StoredStar `json:"storedStars"`
+	Lines []StoredLine `json:"storedLines"`
 }
 
 //星情報詳細
-type StoredStars struct {
+type StoredStar struct {
 	StarItemId    int `json:"starItemId"`
 	StarLocationX int `json:"starLocationX"`
 	StarLocationY int `json:"starLocationY"`
 }
 
 //線情報詳細
-type StoredLines struct {
+type StoredLine struct {
 	Sx string `json:"sx"`
 	Sy string `json:"sy"`
 	Fx string `json:"fx"`
@@ -217,13 +217,13 @@ func GetUserConstellationData(u User) []UserConstellationJson {
 		db.Debug().Where("user_constellation_id = ?", e.Cid).Find(&cl)
 
 		//csのStoredStarスライスを取り出す
-		csStoredStar := []StoredStars{}
+		csStoredStar := []StoredStar{}
 		for _, e := range cs {
 			csStoredStar = append(csStoredStar, e.SStar)
 		}
 
 		//clのStoredLineスライスを取り出す
-		csStoredLine := []StoredLines{}
+		csStoredLine := []StoredLine{}
 		for _, e := range cl {
 			csStoredLine = append(csStoredLine, e.SLines)
 		}
@@ -244,7 +244,7 @@ func GetUserConstellationData(u User) []UserConstellationJson {
 }
 
 //ユーザー定義の構造体をGormで扱えるように定義
-func (p StoredLines) Value() (driver.Value, error) {
+func (p StoredLine) Value() (driver.Value, error) {
 
 	bytes, err := json.Marshal(p)
 	if err != nil {
@@ -253,7 +253,7 @@ func (p StoredLines) Value() (driver.Value, error) {
 	}
 	return string(bytes), nil
 }
-func (p *StoredLines) Scan(input interface{}) error {
+func (p *StoredLine) Scan(input interface{}) error {
 	switch v := input.(type) {
 	case string:
 		return json.Unmarshal([]byte(v), p)
@@ -263,7 +263,7 @@ func (p *StoredLines) Scan(input interface{}) error {
 		return fmt.Errorf("unsupported type: %T", input)
 	}
 }
-func (p StoredStars) Value() (driver.Value, error) {
+func (p StoredStar) Value() (driver.Value, error) {
 
 	bytes, err := json.Marshal(p)
 	if err != nil {
@@ -273,7 +273,7 @@ func (p StoredStars) Value() (driver.Value, error) {
 	return string(bytes), nil
 }
 
-func (p *StoredStars) Scan(input interface{}) error {
+func (p *StoredStar) Scan(input interface{}) error {
 	switch v := input.(type) {
 	case string:
 		return json.Unmarshal([]byte(v), p)

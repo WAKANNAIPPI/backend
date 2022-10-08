@@ -1,6 +1,8 @@
 package database
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -188,4 +190,45 @@ func GetUserConstellationData(u User) []User_constellations {
 	db.Find(&uc, "user_id=?", u.Id) //あるユーザーの作った星座情報を一括取得
 
 	return uc
+}
+
+//ユーザー定義の構造体をGormで扱えるように定義
+func (p StoredLines) Value() (driver.Value, error) {
+
+	bytes, err := json.Marshal(p)
+	if err != nil {
+		return nil, err
+
+	}
+	return string(bytes), nil
+}
+func (p *StoredLines) Scan(input interface{}) error {
+	switch v := input.(type) {
+	case string:
+		return json.Unmarshal([]byte(v), p)
+	case []byte:
+		return json.Unmarshal(v, p)
+	default:
+		return fmt.Errorf("unsupported type: %T", input)
+	}
+}
+func (p StoredStars) Value() (driver.Value, error) {
+
+	bytes, err := json.Marshal(p)
+	if err != nil {
+		return nil, err
+
+	}
+	return string(bytes), nil
+}
+
+func (p *StoredStars) Scan(input interface{}) error {
+	switch v := input.(type) {
+	case string:
+		return json.Unmarshal([]byte(v), p)
+	case []byte:
+		return json.Unmarshal(v, p)
+	default:
+		return fmt.Errorf("unsupported type: %T", input)
+	}
 }

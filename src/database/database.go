@@ -1,6 +1,8 @@
 package database
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -26,25 +28,53 @@ type User_item struct {
 	Quantity int    `gorm:"column:user_item_quantity" json:"itemQty"` //アイテム数量
 }
 
-type User_constellations struct {
-	Cid  string `gorm:"column:user_constellation_id" json:"consteId"`     //星座ID
-	Name string `gorm:"column:user_constellation_name" json:"consteName"` //星座の名前
-	Uid  string `gorm:"column:user_id" json:"-"`                          //ユーザーid
-	Data int    `gorm:"column:user_constellation_data" json:"consteData"` //星座データ
-}
-
 //Item差分管理用(ユーザアイテムのjsonのやり取りに使う)
 type UserItemJson struct {
 	Iid  string `json:"itemId"`
 	Diff int    `json:"itemDiff"`
 }
 
-type UserConstellationJson struct {
-	Cid  string `json:"consteId"`
-	Name string `json:"consteName"`
-	Data int    `json:"consteData"`
+type User_constellation struct { //オリジナル星座基本情報
+	Cid  string `gorm:"column:user_constellation_id" json:"consteId"`     //星座ID
+	Name string `gorm:"column:user_constellation_name" json:"consteName"` //星座の名前
+	Uid  string `gorm:"column:user_id" json:"-"`                          //ユーザーid
 }
 
+type Conste_star struct { //オリジナル星座星情報
+	Id    string     `gorm:"column:id" json:"-"`
+	Cid   string     `gorm:"column:user_constellation_id" json:"-"`
+	SStar StoredStar `gorm:"column:conste_stored_star" json:"StoredStar"`
+}
+
+type Conste_line struct { //オリジナル星座線情報
+	Id     string     `gorm:"column:id" json:"-"`
+	Cid    string     `gorm:"column:conste_stored_star" json:"-"`
+	SLines StoredLine `gorm:"column:conste_lines" json:"StoredLine"`
+}
+
+type UserConstellationJson struct { //クライアントに返すJson
+	Cid   string       `json:"consteId"`
+	Name  string       `json:"consteName"`
+	Stars []StoredStar `json:"storedStars"`
+	Lines []StoredLine `json:"storedLines"`
+}
+
+//星情報詳細
+type StoredStar struct {
+	StarItemId    int `json:"starItemId"`
+	StarLocationX int `json:"starLocationX"`
+	StarLocationY int `json:"starLocationY"`
+}
+
+//線情報詳細
+type StoredLine struct {
+	Sx string `json:"sx"`
+	Sy string `json:"sy"`
+	Fx string `json:"fx"`
+	Fy string `json:"fy"`
+}
+
+//クイズデータ
 type QuizeDataJson struct {
 	No       int    `json:"quizeNumber"`
 	Question string `json:"question"`
@@ -144,24 +174,112 @@ func GetUserItemData(u User) []User_item {
 func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	db := DBconnect()
 
-	UserConstellation := User_constellations{}
+	//各インスタンスの作成
+	UserConstellation := User_constellation{}
+	cs := Conste_star{}
+	cl := Conste_line{}
 
+	//オリジナル星座の基本情報を追加
 	UserConstellation.Uid = u.Id
 	UserConstellation.Name = uc.Name
 	UserConstellation.Cid = uc.Cid
-	UserConstellation.Data = uc.Data
-
 	err := db.Debug().Create(&UserConstellation).Error
+
+	//オリジナル星座の星情報を追加
+	cs.Cid = uc.Cid
+	for _, e := range uc.Stars {
+		cs.SStar = e
+		db.Debug().Create(&cs)
+	}
+
+	//オリジナル星座の線情報を追加
+	cl.Cid = uc.Cid
+	for _, e := range uc.Lines {
+		cl.SLines = e
+		db.Debug().Create(&cl)
+	}
 
 	return err
 }
 
-func GetUserConstellationData(u User) []User_constellations {
+func GetUserConstellationData(u User) []UserConstellationJson {
 	db := DBconnect()
 
-	uc := []User_constellations{}
+	uc := []User_constellation{}
+	cs := []Conste_star{}
+	cl := []Conste_line{}
+	ucj := []UserConstellationJson{}
 
-	db.Find(&uc, "user_id=?", u.Id) //あるユーザーの作った星座情報を一括取得
+	db.Where("user_id = ?", u.Id).Find(&uc)
 
-	return uc
+	for _, e := range uc {
+		db.Debug().Where("user_constellation_id = ?", e.Cid).Find(&cs)
+		db.Debug().Where("user_constellation_id = ?", e.Cid).Find(&cl)
+
+		//csのStoredStarスライスを取り出す
+		csStoredStar := []StoredStar{}
+		for _, e := range cs {
+			csStoredStar = append(csStoredStar, e.SStar)
+		}
+
+		//clのStoredLineスライスを取り出す
+		csStoredLine := []StoredLine{}
+		for _, e := range cl {
+			csStoredLine = append(csStoredLine, e.SLines)
+		}
+
+		//append用のucjを作成
+		ucjAdd := UserConstellationJson{
+			Cid:   e.Cid,
+			Name:  e.Name,
+			Stars: csStoredStar,
+			Lines: csStoredLine,
+		}
+
+		ucj = append(ucj, ucjAdd)
+
+	}
+
+	return ucj
+}
+
+//ユーザー定義の構造体をGormで扱えるように定義
+func (p StoredLine) Value() (driver.Value, error) {
+
+	bytes, err := json.Marshal(p)
+	if err != nil {
+		return nil, err
+
+	}
+	return string(bytes), nil
+}
+func (p *StoredLine) Scan(input interface{}) error {
+	switch v := input.(type) {
+	case string:
+		return json.Unmarshal([]byte(v), p)
+	case []byte:
+		return json.Unmarshal(v, p)
+	default:
+		return fmt.Errorf("unsupported type: %T", input)
+	}
+}
+func (p StoredStar) Value() (driver.Value, error) {
+
+	bytes, err := json.Marshal(p)
+	if err != nil {
+		return nil, err
+
+	}
+	return string(bytes), nil
+}
+
+func (p *StoredStar) Scan(input interface{}) error {
+	switch v := input.(type) {
+	case string:
+		return json.Unmarshal([]byte(v), p)
+	case []byte:
+		return json.Unmarshal(v, p)
+	default:
+		return fmt.Errorf("unsupported type: %T", input)
+	}
 }

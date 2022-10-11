@@ -85,6 +85,8 @@ backend/docker/mysql/db.envを作成し、下のテンプレを保存
 MYSQL_DATABASE=wakannaippi
 MYSQL_ROOT_PASSWORD=****(任意の文字列)
 MYSQL_HOST=wakannaippi_db
+MYSQL_PASSWORD=****(任意の文字列)
+MYSQL_USER=****(任意の文字列)
 TZ='Asia/Tokyo'
 ```
 ## 起動

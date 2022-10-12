@@ -85,6 +85,10 @@ type QuizeDataJson struct {
 	Ans      int    `json:"ans"`
 }
 
+type Unkojson struct {
+	Unko string `json:"unko"`
+}
+
 func DBconnect() *gorm.DB {
 	//iniファイルをロード
 	dbCfg, err := ini.Load("../database/db.ini")

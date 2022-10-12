@@ -20,6 +20,7 @@ func GetRouter() *gin.Engine {
 	r.GET("/flag", model.EventFlag)     //定期イベント処理用のAPI
 	r.GET("/ws/Event", model.WsConnect) //ws確立用のAPI
 	r.POST("/login", model.Userlogin)   //loginAPI
+	r.POST("/sample", model.Sample)
 
 	//ここから先のAPIはログイン済みのユーザでないとアクセスできない。
 	//sessionの使用が必要

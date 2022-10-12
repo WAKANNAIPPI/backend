@@ -183,6 +183,7 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	UserConstellation.Uid = u.Id
 	UserConstellation.Name = uc.Name
 	UserConstellation.Cid = uc.Cid
+	log.Println("DBdebug:", uc)
 	err := db.Debug().Create(&UserConstellation).Error
 
 	//オリジナル星座の星情報を追加

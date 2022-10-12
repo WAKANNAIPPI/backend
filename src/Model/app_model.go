@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -115,12 +114,15 @@ func PostConsteData(ctx *gin.Context) {
 	var ConsteData database.UserConstellationJson
 
 	//なぜかbindJsonで出来なかったので直接ボディを読んでバインディングを実行
-	buf := make([]byte, 2048)
+	/*buf := make([]byte, 2048)
 	n, _ := ctx.Request.Body.Read(buf)
 	b := string(buf[0:n])
 	log.Println("string:", b)
 	b = fmt.Sprintf("{%s}", b)
-	err := json.Unmarshal([]byte(b), &ConsteData)
+	err := json.Unmarshal([]byte(b), &ConsteData)*/
+
+	//binding
+	err := ctx.BindJSON(&ConsteData)
 
 	if err != nil {
 		ctx.Status(http.StatusBadRequest)
@@ -128,6 +130,7 @@ func PostConsteData(ctx *gin.Context) {
 		ctx.Abort()
 	}
 
+	log.Println("ModelConste", ConsteData)
 	err = database.CreateUserConstellationData(user, ConsteData)
 
 	if err != nil {

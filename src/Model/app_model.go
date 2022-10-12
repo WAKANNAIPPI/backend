@@ -136,7 +136,7 @@ func PostConsteData(ctx *gin.Context) {
 	if err != nil {
 		ctx.Status(http.StatusBadRequest)
 		log.Println("primary key:", err)
-		ctx.String(400, "PrimaryKeyError!もう一度試してください") //クライアントにここは実装したいですと伝える
+		ctx.String(400, "もう一度試してください") //クライアントにここは実装したいですと伝える
 	}
 
 }

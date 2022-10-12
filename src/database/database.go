@@ -61,9 +61,9 @@ type UserConstellationJson struct { //クライアントに返すJson
 
 //星情報詳細
 type StoredStar struct {
-	StarItemId    float32 `json:"starItemId"`
-	StarLocationX float32 `json:"starLocationX"`
-	StarLocationY float32 `json:"starLocationY"`
+	StarItemId    float64 `json:"starItemId"`
+	StarLocationX float64 `json:"starLocationX"`
+	StarLocationY float64 `json:"starLocationY"`
 }
 
 //線情報詳細

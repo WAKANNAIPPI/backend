@@ -211,3 +211,11 @@ func WsConnect(ctx *gin.Context) {
 		log.Println(err)
 	}
 }
+
+func Sample(ctx *gin.Context) {
+	req := database.Unkojson{}
+	ctx.BindJSON(&req)
+
+	log.Println(req)
+
+}

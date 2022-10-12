@@ -186,12 +186,20 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	log.Println("DBdebug:", uc)
 	err := db.Debug().Create(&UserConstellation).Error
 
+	if err != nil {
+		return err
+	}
+
 	//オリジナル星座の星情報を追加
 	cs.Cid = uc.Cid
 	for _, e := range uc.Stars {
 		cs.SStar = e
 		log.Println(cs)
-		db.Debug().Create(&cs)
+		err := db.Debug().Create(&cs).Error
+
+		if err != nil {
+			return err
+		}
 	}
 
 	//オリジナル星座の線情報を追加
@@ -199,7 +207,12 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	for _, e := range uc.Lines {
 		cl.SLines = e
 		log.Println("cl:", cl)
-		db.Debug().Create(&cl)
+		err := db.Debug().Create(&cl).Error
+
+		if err != nil {
+			return err
+		}
+
 	}
 
 	return err

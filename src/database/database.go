@@ -49,7 +49,7 @@ type Conste_star struct { //オリジナル星座星情報
 type Conste_line struct { //オリジナル星座線情報
 	Id     string     `gorm:"-" json:"-"`
 	Cid    string     `gorm:"column:user_constellation_id" json:"-"`
-	SLines StoredLine `gorm:"column:conste_lines" json:"StoredLine"`
+	SLines StoredLine `gorm:"column:conste_stored_line" json:"StoredLine"`
 }
 
 type UserConstellationJson struct { //クライアントに返すJson

@@ -41,13 +41,13 @@ type User_constellation struct { //オリジナル星座基本情報
 }
 
 type Conste_star struct { //オリジナル星座星情報
-	Id    string     `gorm:"column:id" json:"-"`
+	Id    string     `gorm:"-" json:"-"`
 	Cid   string     `gorm:"column:user_constellation_id" json:"-"`
 	SStar StoredStar `gorm:"column:conste_stored_star" json:"StoredStar"`
 }
 
 type Conste_line struct { //オリジナル星座線情報
-	Id     string     `gorm:"column:id" json:"-"`
+	Id     string     `gorm:"-" json:"-"`
 	Cid    string     `gorm:"column:conste_stored_star" json:"-"`
 	SLines StoredLine `gorm:"column:conste_lines" json:"StoredLine"`
 }
@@ -190,6 +190,7 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	cs.Cid = uc.Cid
 	for _, e := range uc.Stars {
 		cs.SStar = e
+		log.Println(cs)
 		db.Debug().Create(&cs)
 	}
 
@@ -197,6 +198,7 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	cl.Cid = uc.Cid
 	for _, e := range uc.Lines {
 		cl.SLines = e
+		log.Println("cl:", cl)
 		db.Debug().Create(&cl)
 	}
 

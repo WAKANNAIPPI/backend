@@ -76,13 +76,13 @@ type StoredLine struct {
 
 //クイズデータ
 type QuizeDataJson struct {
-	No       int    `json:"quizeNumber"`
-	Question string `json:"question"`
-	Choice1  string `json:"choice1"`
-	Choice2  string `json:"choice2"`
-	Choice3  string `json:"choice3"`
-	Choice4  string `json:"choice4"`
-	Ans      int    `json:"ans"`
+	No       int    `json:"quizeNumber" csv:"no"`
+	Question string `json:"question" csv:"question"`
+	Choice1  string `json:"choice1" csv:"choice1"`
+	Choice2  string `json:"choice2" csv:"choice2"`
+	Choice3  string `json:"choice3" csv:"choice3"`
+	Choice4  string `json:"choice4" csv:"choice4"`
+	Ans      int    `json:"ans" csv:"answer"`
 }
 
 func DBconnect() *gorm.DB {

@@ -28,7 +28,7 @@ func Userlogin(ctx *gin.Context) {
 	} else {
 
 		pass := reqUser.Password
-		user := database.GetUserData(reqUser)
+		user, _ := database.GetUserData(reqUser)
 		//DBから取得してきたpasswordはハッシュ値
 		hashPass := user.Password
 

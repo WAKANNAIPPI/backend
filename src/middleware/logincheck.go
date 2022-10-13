@@ -32,7 +32,15 @@ func LoginCheck(ctx *gin.Context) {
 			log.Println("unmarshal")
 			ctx.Abort()
 		} else {
-			ctx.Next()
+			_, err := database.GetUserData(UserInfo)
+
+			if err != nil {
+				ctx.Status(http.StatusUnauthorized)
+				log.Println("session")
+				ctx.Abort()
+			} else {
+				ctx.Next()
+			}
 		}
 	}
 }

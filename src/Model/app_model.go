@@ -145,7 +145,7 @@ func QuizeGet(ctx *gin.Context) {
 	var Quize []database.QuizeDataJson
 
 	//csvファイル読み込み
-	b, err := ioutil.ReadFile("database/quize.csv")
+	b, err := ioutil.ReadFile("../database/quize.csv")
 
 	if err != nil {
 		log.Println("csv read err:", err)
@@ -155,6 +155,7 @@ func QuizeGet(ctx *gin.Context) {
 
 	//csvデータを構造体にマッピング
 	err = csvutil.Unmarshal(b, &Quize)
+	log.Println(Quize)
 
 	if err != nil {
 		log.Println("Unmarshal err:", err)

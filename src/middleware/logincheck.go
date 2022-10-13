@@ -35,6 +35,8 @@ func LoginCheck(ctx *gin.Context) {
 			_, err := database.GetUserData(UserInfo)
 
 			if err != nil {
+				session.Clear()
+				session.Save()
 				ctx.Status(http.StatusUnauthorized)
 				log.Println("session")
 				ctx.Abort()

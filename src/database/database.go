@@ -218,6 +218,51 @@ func CreateUserConstellationData(u User, uc UserConstellationJson) error {
 	return err
 }
 
+func UpdateConsteData(req UserConstellationJson) error {
+	db := DBconnect()
+
+	DeleteStar := Conste_star{}
+	DeleteLine := Conste_line{}
+	cs := Conste_star{}
+	cl := Conste_line{}
+
+	err := db.Debug().Where("user_constellation_id = ?", req.Cid).Delete(&DeleteStar).Error
+	if err != nil {
+		return err
+	}
+
+	err = db.Debug().Where("user_constellation_id = ?", req.Cid).Delete(&DeleteLine).Error
+	if err != nil {
+		return err
+	}
+	cs.Cid = req.Cid
+	for _, e := range req.Stars {
+		cs.SStar = e
+		log.Println(cs)
+		err := db.Debug().Create(&cs).Error
+
+		if err != nil {
+			return err
+		}
+	}
+
+	//オリジナル星座の線情報を追加
+	cl.Cid = req.Cid
+	for _, e := range req.Lines {
+		cl.SLines = e
+		log.Println("cl:", cl)
+		err := db.Debug().Create(&cl).Error
+
+		if err != nil {
+			return err
+		}
+
+	}
+
+	return err
+
+}
+
 func GetUserConstellationData(u User) []UserConstellationJson {
 	db := DBconnect()
 

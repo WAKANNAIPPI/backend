@@ -59,6 +59,14 @@ func Userlogin(ctx *gin.Context) {
 	}
 }
 
+func UserInfoGet(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+
+	user := sessionCheck(session, ctx)
+
+	ctx.JSON(200, user.Id)
+}
+
 func GetUserItem(ctx *gin.Context) {
 	session := sessions.Default(ctx)
 

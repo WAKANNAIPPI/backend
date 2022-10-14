@@ -32,6 +32,7 @@ func GetRouter() *gin.Engine {
 		AuthUserGroup.POST("/UserItem/Post", model.PostUserItem)     // ユーザーのアイテムデータ更新内容を受け取るAPI
 		AuthUserGroup.GET("/Quize/Get", model.QuizeGet)              // クイズデータをランダムに返すAPI
 		AuthUserGroup.POST("/OrigConste/Post", model.PostConsteData) //オリジナル星座データを登録するAPI
+		AuthUserGroup.GET("/UserInfo/Get", model.UserInfoGet)
 	}
 
 	return r

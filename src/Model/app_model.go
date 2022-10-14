@@ -149,6 +149,27 @@ func PostConsteData(ctx *gin.Context) {
 
 }
 
+func UpdateConsteData(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+	sessionCheck(session, ctx)
+
+	req := database.UserConstellationJson{}
+	err := ctx.BindJSON(&req)
+
+	if err != nil {
+		ctx.Status(http.StatusBadRequest)
+		log.Println("err:", err)
+	} else {
+		err := database.UpdateConsteData(req)
+		if err != nil {
+			ctx.Status(http.StatusBadRequest)
+			log.Println("err:", err)
+
+		}
+	}
+
+}
+
 func QuizeGet(ctx *gin.Context) {
 	var Quize []database.QuizeDataJson
 

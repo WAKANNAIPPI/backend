@@ -1,7 +1,7 @@
 # backend
 わかんないッピのバックエンド用リポジトリ
 
-#使ったOSS
+# 使ったOSS
 MySQL
 Docker
 Docker-compose

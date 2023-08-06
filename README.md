@@ -1,6 +1,14 @@
 # backend
 わかんないッピのバックエンド用リポジトリ
 
+#使ったOSS
+MySQL
+Docker
+Docker-compose
+Go
+Gin
+Gorm
+
 
 
 # ルーティングについて

@@ -1,6 +1,7 @@
 # backend
 わかんないッピのバックエンド用リポジトリ
-
+# スライド
+https://docs.google.com/presentation/d/1nSbAIJs5kFtTcM-n8WmiBhEJi0ZxIbHm/edit#slide=id.p28
 # 使ったOSS
 MySQL
 Docker
